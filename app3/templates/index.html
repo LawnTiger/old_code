@@ -1,0 +1,100 @@
+<html>
+<head>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.11.2.min.js') }}"></script>
+    <style>
+        a {
+            background: yellow;
+        }
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <script>
+    // 生成 excel
+    function method1() {
+                tableToExcel('table');
+                    }
+    var tableToExcel = (function() {
+                  var uri = 'data:application/vnd.ms-excel;base64,',
+                  template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+                  base64 = function(s) {console.log(s); return window.btoa(unescape(encodeURIComponent(s))) },
+                  format = function(s, c) {
+                      return s.replace(/{(\w+)}/g,
+                                              function(m, p) { return c[p]; }) }
+return function(table, name) {
+              if (!table.nodeType) table = document.getElementById(table);
+                          var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML};console.log(ctx);console.log(format(template, ctx));
+                                      window.location.href = uri + base64(format(template, ctx))
+                                                    }
+      })()
+
+    $(function() { 
+//        $("#btn_1").click(function() { 
+//            var $keyword = $("#Text1").val() 
+            setHeightKeyWord('table', '今', 'red', true) 
+            setHeightKeyWord('table', '明', 'blue', true) 
+            setHeightKeyWord('table', '月', 'green', true) 
+//        }); 
+    }); 
+    function setHeightKeyWord(id, keyword, color, bold) { 
+        if (keyword == "") 
+            return; 
+        var tempHTML = $("#" + id).html(); 
+        var htmlReg = new RegExp("\<.*?\>", "i"); 
+        var arrA = new Array(); 
+        for (var i = 0; true; i++) { 
+            var m = htmlReg.exec(tempHTML); 
+            if (m) { 
+                arrA[i] = m; 
+            } 
+            else { 
+                break; 
+            } 
+            tempHTML = tempHTML.replace(m, "[[[[" + i + "]]]]"); 
+        } 
+        var replaceText 
+        if (bold) 
+            replaceText = "<b style='color:" + color + ";'>$1</b>"; 
+        else 
+            replaceText = "<font style='color:" + color + ";'>$1</font>"; 
+        var arrayWord = keyword.split(','); 
+        for (var w = 0; w < arrayWord.length; w++) { 
+            var r = new RegExp("(" + arrayWord[w].replace(/[(){}.+*?^$|\\\[\]]/g, "\\$&") + ")", "ig"); 
+            tempHTML = tempHTML.replace(r, replaceText); 
+        } 
+        for (var i = 0; i < arrA.length; i++) { 
+            tempHTML = tempHTML.replace("[[[[" + i + "]]]]", arrA[i]); 
+        } 
+        $("#" + id).html(tempHTML); 
+    } 
+
+    </script>
+    <form method="POST">
+        <textarea name="word" style="width:50%;height:300px;"></textarea><br>
+        <input type="submit">
+    </form>
+    <table id="table" border=1>
+        <tr>
+            {% for i in biao %}
+            <td>{{ i|safe }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for i in word %}
+            <td>{{ i|safe }}</td>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for i in result %}
+            <td>{{i}}</td>
+            {% endfor %}
+        </tr>
+    </table>
+    {% if result %}
+        <button onclick="javascript:method1()">导出excel</button>
+    {% endif %}
+</body>
+</html>
+

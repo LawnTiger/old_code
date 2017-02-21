@@ -1,0 +1,74 @@
+<html>
+<head>
+    <title>战报</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        input[type=text] {
+            width: 50px;
+        }
+        select, input[type=submit] {
+            width: 100px;
+        }
+    </style>
+    <script type="text/javascript" src="{{ url_for('static', filename='jquery-1.11.2.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $("form").submit(function(e) {
+                var ref = $(this).find("[required=required]");
+                alert('ref');
+                $(ref).each(function(){
+                    if ( $(this).val() == '' )
+                    {
+                        alert("Required field should not be blank.");
+                        $(this).focus();
+                        e.preventDefault();
+                        return false;
+                    }
+                });  return true;
+            });
+        });
+        
+    </script>
+</head>
+
+<body>
+    <form id="form" action="store" method="POST">
+    <h3>战报提交</h3>
+    门店 :
+    <select name="store_id">
+        <option value="0"></option>
+        <option value="1"></option>
+        <option value="2"></option>
+        <option value="3"></option>
+        <option value="4"></option>
+    </select>
+    <br />
+    战报日期 : <input type="text" value="1" name="month" />月<input type="text" value="1" name="day" />日
+<!--    <select id="slt-date">-->
+        <script>
+//            var d = new Date();
+//            var dateOpt = d.getDate();alert(dateOpt);
+//            document.write(dateOpt)
+        </script>
+<!--    </select>-->
+    <hr />
+
+    <table>
+        {% for value in biao %}
+            {% if biao['t'+loop.index0|string] %}
+            <tr>
+                <td>{{ biao['t'+loop.index0|string] }}</td>
+                <td>
+                    <input type="text" value="{{ loop.index0 }}" required="required" name="t{{ loop.index0 }}">
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <input type="submit" value="提交" />
+    </form>
+</body>
+<script>
+    
+</script>
+</html>

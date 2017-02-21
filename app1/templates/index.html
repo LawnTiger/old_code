@@ -1,0 +1,42 @@
+<html>
+<head>
+    <title>战报</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        input {
+            width: 45px;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="save" method="POST">
+    <h3>战报提交</h3>
+    门店 :
+    <select>
+        <option></option>
+        <option></option>
+        <option></option>
+        <option></option>
+    </select>
+    <br />
+    战报日期 : <input type="text" name="month" />月<input type="text" name="day" />日
+<!--    <select id="slt-date">-->
+        <script>
+//            var d = new Date();
+//            var dateOpt = d.getDate();alert(dateOpt);
+//            document.write(dateOpt)
+        </script>
+<!--    </select>-->
+    <hr />
+
+    <table>
+        {% for value in biao %}
+        <tr><td>{{ value }}</td><td><input type="text" name="t[]"></td></tr>
+        {% endfor %}
+    </table>
+    <input type="submit" value="提交" />
+    </form>
+</body>
+
+</html>
